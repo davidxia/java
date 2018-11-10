@@ -27,6 +27,7 @@ import io.kubernetes.client.models.V1Pod;
 import io.kubernetes.client.models.V1Secret;
 import io.kubernetes.client.models.V1Service;
 import io.kubernetes.client.models.V1ServicePort;
+import io.kubernetes.client.models.V1VolumeMount;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -235,5 +236,16 @@ public class YamlTest {
     } catch (Exception ex) {
       assertNull("Unexpected exception: " + ex.toString(), ex);
     }
+  }
+
+  @Test
+  public void testDumpBooleanValues() {
+    final String input =
+        "name: secrets\n"
+        + "mountPath: '/secrets'\n"
+        + "readOnly: true";
+    final V1VolumeMount v1VolumeMount = Yaml.loadAs(input, V1VolumeMount.class);
+    final String output = Yaml.dump(v1VolumeMount);
+    assertThat(output, equalTo(input));
   }
 }
